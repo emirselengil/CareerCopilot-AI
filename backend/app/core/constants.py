@@ -30,6 +30,7 @@ MSG_FILE_CONTENT_MISMATCH = (
 MSG_INVALID_DOCUMENT_TYPE = "document_type alanı 'cv' veya 'linkedin_pdf' olmalıdır."
 MSG_DOCUMENT_NOT_FOUND = "Belge bulunamadı."
 MSG_NO_DOCUMENTS_FOR_ANALYSIS = "Analiz için önce bir CV yüklemeli veya oluşturmalısınız."
+MSG_DOCUMENT_FILE_MISSING = "Belge dosyası işlenirken bulunamadı, lütfen belgeyi tekrar yükleyin."
 
 # CV
 MSG_CV_NAME_EMAIL_REQUIRED = "Ad-soyad ve e-posta zorunludur."

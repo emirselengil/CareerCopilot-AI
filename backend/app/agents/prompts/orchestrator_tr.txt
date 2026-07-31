@@ -11,5 +11,9 @@ Kullanıcı Mesajı: {{ user_message }}
 Yalnızca şu JSON şemasında yanıt ver:
 {"intent": "skill_gap", "params": {}, "followup_agent": "skill_gap"}
 
+ÖNEMLİ: Yanıtın SADECE yukarıdaki şemaya uyan JSON nesnesiyle başlamalı ve
+bitmelidir. Kod bloğu (```), açıklama cümlesi, selamlama veya JSON dışında
+hiçbir karakter EKLEME.
+
 NOT: Bu bir placeholder sistem prompt'udur; AI ekibi (TASK-242) tarafından
 fine-tuning verisiyle uyumlu, daha zengin bir versiyonla değiştirilecektir.

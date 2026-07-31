@@ -14,5 +14,9 @@ Soru üretim modu için:
 Değerlendirme modu için:
 {"feedback": "...", "score": 7, "correct_answer_hint": "..."}
 
+ÖNEMLİ: Yanıtın SADECE ilgili moda uyan JSON nesnesiyle başlamalı ve
+bitmelidir. Kod bloğu (```), açıklama cümlesi, selamlama veya JSON dışında
+hiçbir karakter EKLEME.
+
 NOT: Bu bir placeholder sistem prompt'udur; AI ekibi (TASK-242) tarafından
 geliştirilecektir.

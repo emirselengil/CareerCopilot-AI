@@ -5,6 +5,7 @@ PyMuPDF (fitz) ile PDF, python-docx ile DOCX okunur.
 from __future__ import annotations
 
 import os
+import time
 import uuid
 
 import fitz  # PyMuPDF
@@ -14,6 +15,9 @@ from app.config import settings
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
+
+_FILE_VISIBILITY_RETRY_ATTEMPTS = 5
+_FILE_VISIBILITY_RETRY_DELAY_SECONDS = 0.4
 
 
 def build_upload_path(user_id: uuid.UUID, filename: str) -> str:
@@ -57,8 +61,23 @@ def extract_text_from_docx(file_path: str) -> str:
     return "\n\n".join(paragraphs).strip()
 
 
+def _wait_until_visible(file_path: str) -> None:
+    """Celery worker ve backend farklı container'lar olduğu için, yükleme
+    sonrası dosya paylaşımlı Docker volume'ünde anlık olarak görünmeyebilir
+    (özellikle Windows/Docker Desktop'ta gözlemlenen bir gecikme). Gerçekten
+    eksik bir dosyayı sessizce boş metne çevirmek yerine kısa bir retry ile
+    bu geçici durumu tolere edip, hâlâ yoksa net bir hata fırlatıyoruz.
+    """
+    for _ in range(_FILE_VISIBILITY_RETRY_ATTEMPTS):
+        if os.path.exists(file_path):
+            return
+        time.sleep(_FILE_VISIBILITY_RETRY_DELAY_SECONDS)
+    raise FileNotFoundError(file_path)
+
+
 def extract_raw_text(file_path: str) -> str:
     lowered = file_path.lower()
+    _wait_until_visible(file_path)
     try:
         if lowered.endswith(".pdf"):
             return extract_text_from_pdf(file_path)

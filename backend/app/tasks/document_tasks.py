@@ -10,6 +10,7 @@ import uuid
 
 from sqlalchemy import select
 
+from app.core.constants import MSG_DOCUMENT_FILE_MISSING
 from app.core.logging import get_logger
 from app.db.session import async_session_maker, run_in_fresh_event_loop
 from app.models.enums import DocumentType, ProcessingStatus
@@ -58,6 +59,10 @@ async def _process_document(doc_id: str) -> None:
 
             document.status = ProcessingStatus.COMPLETED
             document.error_message = None
+        except FileNotFoundError:
+            logger.exception("Belge dosyası diskte bulunamadı: %s", doc_id)
+            document.status = ProcessingStatus.FAILED
+            document.error_message = MSG_DOCUMENT_FILE_MISSING
         except Exception as exc:  # noqa: BLE001
             logger.exception("Belge işlenirken hata oluştu: %s", doc_id)
             document.status = ProcessingStatus.FAILED
