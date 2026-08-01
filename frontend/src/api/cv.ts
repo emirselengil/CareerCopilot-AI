@@ -42,6 +42,17 @@ export async function exportCVPdf(payload: ExportPdfRequest): Promise<ExportPdfR
 }
 
 /**
+ * CV Builder Editor'ün canlı PDF önizlemesi (kalıcı belge oluşturmaz).
+ */
+export async function previewCVPdf(draftId: string, language: 'tr' | 'en'): Promise<Blob> {
+  const { data } = await apiClient.get<Blob>(`/cv/draft/${draftId}/preview-pdf`, {
+    params: { language },
+    responseType: 'blob',
+  });
+  return data;
+}
+
+/**
  * `download_url` API_CONTRACT.md §4'e göre `/api/v1` önekiyle birlikte gelir
  * (`/api/v1/cv/download/{document_id}`); `apiClient`'ın `baseURL`'i de aynı
  * öneki içerdiğinden çakışmayı önlemek için önek burada temizlenir. İndirme,
