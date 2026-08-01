@@ -10,6 +10,7 @@ import { getApiErrorMessage } from '@/api/client';
 import { Button } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { tr } from '@/i18n/tr';
+import { AboutSection } from '@/components/cv/sections/AboutSection';
 import { EducationSection } from '@/components/cv/sections/EducationSection';
 import { ExperienceSection } from '@/components/cv/sections/ExperienceSection';
 import { SkillsSection } from '@/components/cv/sections/SkillsSection';
@@ -38,6 +39,7 @@ import type { CVSection, OutputLanguage, SectionContent, SectionType } from '@/t
 type AnySectionComponent = ComponentType<any>;
 
 const sectionComponents: Record<SectionType, AnySectionComponent> = {
+  about: AboutSection,
   education: EducationSection,
   experience: ExperienceSection,
   skills: SkillsSection,

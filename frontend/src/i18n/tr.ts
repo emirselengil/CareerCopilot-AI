@@ -190,6 +190,7 @@ export const tr = {
     interestsHint: 'Virgülle ayırarak yazın, örn: Açık kaynak, Satranç, Koşu',
     techStackHint: 'Virgülle ayırın, örn: Python, FastAPI',
     sections: {
+      about: 'Hakkımda',
       education: 'Eğitim',
       experience: 'Deneyim',
       skills: 'Yetenekler',

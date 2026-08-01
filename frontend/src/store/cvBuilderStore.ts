@@ -25,6 +25,8 @@ function nextOrder(sections: CVSection[]): number {
 
 function defaultContentForSection(type: SectionType): SectionContent {
   switch (type) {
+    case 'about':
+      return { text: '' };
     case 'education':
       return { items: [] };
     case 'experience':

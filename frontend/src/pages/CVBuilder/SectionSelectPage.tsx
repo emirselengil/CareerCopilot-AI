@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Circle,
   FileCheck2,
+  FileText,
   FolderKanban,
   GraduationCap,
   Heart,
@@ -32,6 +33,7 @@ import { tr } from '@/i18n/tr';
 import type { SectionType } from '@/types/cv';
 
 const sectionOrder: SectionType[] = [
+  'about',
   'education',
   'experience',
   'skills',
@@ -49,6 +51,7 @@ const sectionOrder: SectionType[] = [
 ];
 
 const sectionIcons: Record<SectionType, LucideIcon> = {
+  about: FileText,
   education: GraduationCap,
   experience: Briefcase,
   skills: Zap,

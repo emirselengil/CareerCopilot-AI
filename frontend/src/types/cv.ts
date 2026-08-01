@@ -5,6 +5,7 @@ export type OutputLanguage = 'tr' | 'en' | 'both';
 export type CVDraftStatus = 'draft' | 'generated' | 'exported';
 
 export type SectionType =
+  | 'about'
   | 'education'
   | 'experience'
   | 'skills'
@@ -27,6 +28,10 @@ export interface PersonalInfo {
   location?: string;
   linkedin_url?: string;
   github_url?: string;
+}
+
+export interface AboutContent {
+  text: string;
 }
 
 export interface EducationItem {
@@ -153,6 +158,7 @@ export interface CustomContent {
 }
 
 export type SectionContent =
+  | AboutContent
   | EducationContent
   | ExperienceContent
   | SkillsContent
