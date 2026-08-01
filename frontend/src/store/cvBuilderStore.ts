@@ -4,7 +4,6 @@ import { tr } from '@/i18n/tr';
 import type {
   CVSection,
   GithubProjectImport,
-  OutputLanguage,
   PersonalInfo,
   SectionContent,
   SectionType,
@@ -64,7 +63,6 @@ interface CVBuilderState {
   personal: PersonalInfo;
   selectedSections: SectionType[];
   sections: CVSection[];
-  outputLanguage: OutputLanguage;
   githubProjectsImported: boolean;
   draftId: string | null;
 
@@ -72,7 +70,6 @@ interface CVBuilderState {
   toggleSection: (type: SectionType) => void;
   updateSection: (type: SectionType, content: SectionContent) => void;
   reorderSections: (type: SectionType, direction: 'up' | 'down') => void;
-  setOutputLanguage: (language: OutputLanguage) => void;
   importGithubProjects: (projects: GithubProjectImport[]) => void;
   setDraftId: (draftId: string | null) => void;
   reset: () => void;
@@ -82,7 +79,6 @@ const initialState = {
   personal: emptyPersonal,
   selectedSections: [] as SectionType[],
   sections: [] as CVSection[],
-  outputLanguage: 'tr' as OutputLanguage,
   githubProjectsImported: false,
   draftId: null as string | null,
 };
@@ -144,8 +140,6 @@ export const useCVBuilderStore = create<CVBuilderState>()(
         const reNumbered = ordered.map((s, i) => ({ ...s, order: i + 1 }));
         set({ sections: reNumbered });
       },
-
-      setOutputLanguage: (language) => set({ outputLanguage: language }),
 
       importGithubProjects: (projects) => {
         const { sections, selectedSections } = get();

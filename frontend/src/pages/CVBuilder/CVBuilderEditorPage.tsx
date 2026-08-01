@@ -9,28 +9,18 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { Button } from '@/components/ui/Button';
 import { tr } from '@/i18n/tr';
 
-type EditorLanguage = 'tr' | 'en';
-
-function tabClass(active: boolean): string {
-  return `px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-    active
-      ? 'border-primary-600 text-primary-700 dark:text-primary-400'
-      : 'border-transparent text-faint hover:text-muted'
-  }`;
-}
-
 /**
  * CV taslağı canlı PDF önizlemesi (bkz. API_CONTRACT.md §4, TASK-231).
  * `status="generated"` (veya `"exported"`) olana kadar polling ile bekler;
  * ardından gerçek PDF export'unun birebir aynısı (`form_data.sections`'tan
  * üretilen yapılandırılmış CV) `/cv/draft/{id}/preview-pdf` üzerinden çekilip
- * bir `<iframe>` içinde gösterilir — WYSIWYG garantilidir çünkü aynı render
- * pipeline'ı kullanılır.
+ * neredeyse tüm ekranı kaplayan bir `<iframe>` içinde gösterilir — WYSIWYG
+ * garantilidir çünkü aynı render pipeline'ı kullanılır. Uygulama yalnızca
+ * Türkçe CV üretir (İngilizce desteği kaldırıldı).
  */
 export function CVBuilderEditorPage() {
   const { draftId } = useParams<{ draftId: string }>();
 
-  const [activeLang, setActiveLang] = useState<EditorLanguage>('tr');
   const [isDownloading, setIsDownloading] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -46,15 +36,9 @@ export function CVBuilderEditorPage() {
 
   const draft = draftQuery.data;
 
-  useEffect(() => {
-    if (draft && draft.output_language !== 'both') {
-      setActiveLang(draft.output_language === 'en' ? 'en' : 'tr');
-    }
-  }, [draft]);
-
   const previewQuery = useQuery({
-    queryKey: ['cvDraftPreviewPdf', draftId, activeLang],
-    queryFn: () => previewCVPdf(draftId as string, activeLang),
+    queryKey: ['cvDraftPreviewPdf', draftId],
+    queryFn: () => previewCVPdf(draftId as string),
     enabled: !!draftId && !!draft && draft.status !== 'draft',
   });
 
@@ -69,7 +53,7 @@ export function CVBuilderEditorPage() {
     if (!draftId) return;
     setIsDownloading(true);
     try {
-      const exportRes = await exportCVPdf({ draft_id: draftId, language: activeLang });
+      const exportRes = await exportCVPdf({ draft_id: draftId, language: 'tr' });
       const blob = await downloadCvPdf(exportRes.download_url);
       const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
@@ -110,27 +94,15 @@ export function CVBuilderEditorPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4 pb-10">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold text-default">{tr.cvBuilder.editorTitle}</h1>
+    <div className="flex h-[calc(100vh-6rem)] flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-semibold text-default">{tr.cvBuilder.editorTitle}</h1>
         <Button onClick={handleDownloadPdf} isLoading={isDownloading}>
           {isDownloading ? tr.cvBuilder.editorDownloading : tr.cvBuilder.editorDownloadPdf}
         </Button>
       </div>
 
-      {draft.output_language === 'both' && (
-        <div className="flex gap-2 border-b border-border">
-          <button type="button" onClick={() => setActiveLang('tr')} className={tabClass(activeLang === 'tr')}>
-            {tr.cvBuilder.editorTabTr}
-          </button>
-          <button type="button" onClick={() => setActiveLang('en')} className={tabClass(activeLang === 'en')}>
-            {tr.cvBuilder.editorTabEn}
-          </button>
-        </div>
-      )}
-
-      <div className="card">
-        <label className="label">{tr.cvBuilder.editorPreviewLabel}</label>
+      <div className="min-h-0 flex-1">
         {previewQuery.isLoading ? (
           <Spinner label={tr.cvBuilder.editorPreviewLoading} />
         ) : previewQuery.isError ? (
@@ -142,14 +114,10 @@ export function CVBuilderEditorPage() {
           <iframe
             src={previewUrl}
             title={tr.cvBuilder.editorPreviewLabel}
-            className="h-[80vh] w-full rounded-xl border border-border"
+            className="h-full w-full rounded-xl border border-border"
           />
         ) : null}
       </div>
-
-      <p className="text-xs text-faint">
-        {tr.cvBuilder.editorDraftStatus} <span className="font-medium text-muted">{draft.status}</span>
-      </p>
     </div>
   );
 }

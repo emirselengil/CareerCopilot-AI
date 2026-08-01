@@ -1,6 +1,6 @@
 /** API_CONTRACT.md §4 CV Generate / Writer */
 
-export type OutputLanguage = 'tr' | 'en' | 'both';
+export type OutputLanguage = 'tr';
 
 export type CVDraftStatus = 'draft' | 'generated' | 'exported';
 
@@ -239,7 +239,7 @@ export interface CVDraftListResponse {
 
 export interface ExportPdfRequest {
   draft_id: string;
-  language: 'tr' | 'en';
+  language: 'tr';
 }
 
 export interface ExportPdfResponse {

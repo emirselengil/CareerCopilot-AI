@@ -26,7 +26,7 @@ import { ReferencesSection } from '@/components/cv/sections/ReferencesSection';
 import { DeclarationSection } from '@/components/cv/sections/DeclarationSection';
 import { CustomSection } from '@/components/cv/sections/CustomSection';
 import type { SectionFormHandle } from '@/components/cv/sections/types';
-import type { CVSection, OutputLanguage, SectionContent, SectionType } from '@/types/cv';
+import type { CVSection, SectionContent, SectionType } from '@/types/cv';
 
 /**
  * Her bölüm component'i kendi özel content tipini (örn. `EducationContent`) ve
@@ -56,19 +56,11 @@ const sectionComponents: Record<SectionType, AnySectionComponent> = {
   custom: CustomSection,
 };
 
-const outputLanguageOptions: { value: OutputLanguage; label: string }[] = [
-  { value: 'tr', label: tr.cvBuilder.outputLanguageTr },
-  { value: 'en', label: tr.cvBuilder.outputLanguageEn },
-  { value: 'both', label: tr.cvBuilder.outputLanguageBoth },
-];
-
 export function CVBuilderFormPage() {
   const navigate = useNavigate();
   const personal = useCVBuilderStore((state) => state.personal);
   const sections = useCVBuilderStore((state) => state.sections);
-  const outputLanguage = useCVBuilderStore((state) => state.outputLanguage);
   const githubProjectsImported = useCVBuilderStore((state) => state.githubProjectsImported);
-  const setOutputLanguage = useCVBuilderStore((state) => state.setOutputLanguage);
   const updateSection = useCVBuilderStore((state) => state.updateSection);
   const reorderSections = useCVBuilderStore((state) => state.reorderSections);
   const setDraftId = useCVBuilderStore((state) => state.setDraftId);
@@ -118,7 +110,7 @@ export function CVBuilderFormPage() {
         sections: collected,
         github_projects_imported: githubProjectsImported,
       },
-      output_language: outputLanguage,
+      output_language: 'tr',
     });
   }
 
@@ -180,25 +172,6 @@ export function CVBuilderFormPage() {
           </div>
         );
       })}
-
-      <div className="card">
-        <h2 className="label mb-2">{tr.cvBuilder.outputLanguage}</h2>
-        <div className="flex gap-4">
-          {outputLanguageOptions.map((opt) => (
-            <label key={opt.value} className="flex items-center gap-2 text-sm text-muted">
-              <input
-                type="radio"
-                name="outputLanguage"
-                value={opt.value}
-                checked={outputLanguage === opt.value}
-                onChange={() => setOutputLanguage(opt.value)}
-                className="h-4 w-4 border-border text-primary-600 focus:ring-primary-500"
-              />
-              {opt.label}
-            </label>
-          ))}
-        </div>
-      </div>
 
       <div className="fixed inset-x-0 bottom-0 border-t border-border bg-surface/95 p-4 shadow-lg backdrop-blur-md lg:pl-64">
         <div className="mx-auto flex max-w-4xl justify-end gap-3">

@@ -44,9 +44,8 @@ export async function exportCVPdf(payload: ExportPdfRequest): Promise<ExportPdfR
 /**
  * CV Builder Editor'ün canlı PDF önizlemesi (kalıcı belge oluşturmaz).
  */
-export async function previewCVPdf(draftId: string, language: 'tr' | 'en'): Promise<Blob> {
+export async function previewCVPdf(draftId: string): Promise<Blob> {
   const { data } = await apiClient.get<Blob>(`/cv/draft/${draftId}/preview-pdf`, {
-    params: { language },
     responseType: 'blob',
   });
   return data;
