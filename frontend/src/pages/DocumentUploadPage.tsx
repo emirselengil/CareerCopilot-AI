@@ -218,21 +218,27 @@ export function DocumentUploadPage() {
       <div>
         <h2 className="mb-3 text-lg font-semibold text-default">{tr.documents.uploadedDocumentsTitle}</h2>
         {latestDocsQuery.isLoading && <Spinner label={tr.common.loading} />}
-        {latestDocsQuery.data && latestDocsQuery.data.documents.length === 0 && (
-          <EmptyState title={tr.documents.noDocuments} />
-        )}
-        {latestDocsQuery.data && latestDocsQuery.data.documents.length > 0 && (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {latestDocsQuery.data.documents.map((doc) => (
-              <DocumentCard
-                key={doc.document_id}
-                doc={doc}
-                onDelete={handleDelete}
-                isDeleting={deletingId === doc.document_id}
-              />
-            ))}
-          </div>
-        )}
+        {latestDocsQuery.data &&
+          (() => {
+            const visibleDocs = latestDocsQuery.data.documents.filter(
+              (doc) => doc.document_type !== 'generated_cv',
+            );
+            if (visibleDocs.length === 0) {
+              return <EmptyState title={tr.documents.noDocuments} />;
+            }
+            return (
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {visibleDocs.map((doc) => (
+                  <DocumentCard
+                    key={doc.document_id}
+                    doc={doc}
+                    onDelete={handleDelete}
+                    isDeleting={deletingId === doc.document_id}
+                  />
+                ))}
+              </div>
+            );
+          })()}
       </div>
     </div>
   );
